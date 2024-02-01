@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+
 @Repository
 public class RoleDAOImpl implements RoleDAO {
     @PersistenceContext
@@ -24,6 +25,7 @@ public class RoleDAOImpl implements RoleDAO {
             return null;
         }
     }
+
     @Override
     public List<Role> findAllRole() {
         String jpql = "SELECT r FROM Role r";
@@ -35,11 +37,11 @@ public class RoleDAOImpl implements RoleDAO {
     public void saveRole(Role role) {
         entityManager.persist(role);
     }
+
     @Override
     public Role findRoleById(Long id) {
         return entityManager.find(Role.class, id);
     }
-
 
 
     @Override

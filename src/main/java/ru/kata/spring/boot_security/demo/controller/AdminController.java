@@ -31,6 +31,7 @@ public class AdminController {
         model.addAttribute("users", userService.findAll());
         return "admin-all";
     }
+
     @GetMapping("/{id}/edit")
     public String editUser(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.findById(id).get());
@@ -39,11 +40,11 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user")  User user,@RequestParam("checkRoles") String[] selectResult) {
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam("rolesCheckBox") String[] selectedRoles) {
         List<Role> roles = new ArrayList<>();
-        for (String s : selectResult) {
+        for (String s : selectedRoles) {
             roles.add(roleService.findRoleByRoleName("ROLE_" + s));
-            if(s.equals("ADMIN")){
+            if (s.equals("ADMIN")) {
                 roles.add(roleService.findRoleByRoleName("ROLE_USER"));
             }
             user.setRoles(roles);
@@ -52,11 +53,13 @@ public class AdminController {
         userService.updateUser(user);
         return "admin-show";
     }
+
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return "redirect:/admin";
     }
+
     @GetMapping("/new")
     public String formCreateUser(@ModelAttribute("user") User user, Model model) {
 
@@ -64,19 +67,17 @@ public class AdminController {
         model.addAttribute("allRoles", roleService.findAllRoles());
         return "admin-new";
     }
+
     @PostMapping("/new")
-    public String addUser(@ModelAttribute("user") User user, @RequestParam("checkRoles") String[] selectResult) {
-        System.out.println("asd");
+    public String addUser(@ModelAttribute("user") User user, @RequestParam("checkRoles") String[] selectedRoles) {
         List<Role> roles = new ArrayList<>();
-        for (String s : selectResult) {
+        for (String s : selectedRoles) {
             roles.add(roleService.findRoleByRoleName("ROLE_" + s));
-            if(s.equals("ADMIN")){
+            if (s.equals("ADMIN")) {
                 roles.add(roleService.findRoleByRoleName("ROLE_USER"));
             }
             user.setRoles(roles);
         }
-        System.out.println(user.getPassword());
-        System.out.println(user.getFirstName());
         user.setPassword(encoder.encode(user.getPassword()));
         userService.save(user);
         return "redirect:/admin";
