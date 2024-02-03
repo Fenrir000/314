@@ -4,9 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -24,14 +22,14 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "last_name")
     private String lastName;
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "users_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
-    public User(String email, String firstName, String password, String lastName, List<Role> roles) {
+    public User(String email, String firstName, String password, String lastName, Set<Role> roles) {
         this.email = email;
         this.firstName = firstName;
         this.password = password;
@@ -88,11 +86,11 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -11,7 +11,10 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -40,15 +43,16 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam("rolesCheckBox") String[] selectedRoles) {
-        List<Role> roles = new ArrayList<>();
-        for (String s : selectedRoles) {
-            roles.add(roleService.findRoleByRoleName("ROLE_" + s));
-            if (s.equals("ADMIN")) {
-                roles.add(roleService.findRoleByRoleName("ROLE_USER"));
-            }
-            user.setRoles(roles);
-        }
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam("rolesCheckBox") List<String> selectedRoles) {
+        Set<Role> roles = selectedRoles.stream()
+                .map(s -> roleService.findRoleByRoleName("ROLE_" + s))
+                .collect(Collectors.toSet());
+
+//        if (selectedRoles.contains("ADMIN")) {
+//            roles.add(roleService.findRoleByRoleName("ROLE_USER"));
+//        }
+
+        user.setRoles(roles);
 
         userService.updateUser(user);
         return "admin-show";
@@ -69,16 +73,18 @@ public class AdminController {
     }
 
     @PostMapping("/new")
-    public String addUser(@ModelAttribute("user") User user, @RequestParam("checkRoles") String[] selectedRoles) {
-        List<Role> roles = new ArrayList<>();
-        for (String s : selectedRoles) {
-            roles.add(roleService.findRoleByRoleName("ROLE_" + s));
-            if (s.equals("ADMIN")) {
-                roles.add(roleService.findRoleByRoleName("ROLE_USER"));
-            }
-            user.setRoles(roles);
-        }
-        user.setPassword(encoder.encode(user.getPassword()));
+    public String addUser(@ModelAttribute("user") User user, @RequestParam("rolesCheckBox") List<String> selectedRoles) {
+        Set<Role> roles = selectedRoles.stream()
+                .map(s -> roleService.findRoleByRoleName("ROLE_" + s))
+                .collect(Collectors.toSet());
+
+//        if (selectedRoles.contains("ADMIN")) {
+//            roles.add(roleService.findRoleByRoleName("ROLE_USER"));
+//        }
+
+        user.setRoles(roles);
+
+
         userService.save(user);
         return "redirect:/admin";
     }

@@ -20,12 +20,13 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-    private final UserServiceImpl userService;
+    private final UserDetailsService userDetailsService;
+    private final SecurityBeansConfig securityBeansConfig;
 
-    @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImpl userService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userDetailsService, SecurityBeansConfig securityBeansConfig) {
         this.successUserHandler = successUserHandler;
-        this.userService = userService;
+        this.userDetailsService = userDetailsService;
+        this.securityBeansConfig = securityBeansConfig;
     }
 
     @Override
@@ -43,14 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService)
-                .passwordEncoder(getPasswordEncoder());
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(securityBeansConfig.getPasswordEncoder());
     }
 }

@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.repository.UserDAO;
@@ -13,16 +14,18 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
-
+    private final PasswordEncoder encoder;
     private final UserDAO userDao;
 
-    public UserServiceImpl(UserDAO userDao) {
+    public UserServiceImpl(PasswordEncoder encoder, UserDAO userDao) {
+        this.encoder = encoder;
         this.userDao = userDao;
     }
 
     @Override
     @Transactional
     public void save(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
         userDao.save(user);
     }
 
@@ -41,7 +44,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void updateUser(User user) {
-        userDao.updateUser(user);
+        if(user.getPassword().toString().equals(findById(user.getId()).get().getPassword())){
+            userDao.updateUser(user);
+        } else{
+        user.setPassword(encoder.encode(user.getPassword()));
+        userDao.updateUser(user);}
     }
 
     @Override
