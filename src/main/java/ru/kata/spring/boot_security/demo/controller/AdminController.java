@@ -42,15 +42,13 @@ public class AdminController {
         return "admin-edit";
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping()
     public String updateUser(@ModelAttribute("user") User user, @RequestParam("rolesCheckBox") List<String> selectedRoles) {
+
         Set<Role> roles = selectedRoles.stream()
                 .map(s -> roleService.findRoleByRoleName("ROLE_" + s))
                 .collect(Collectors.toSet());
 
-//        if (selectedRoles.contains("ADMIN")) {
-//            roles.add(roleService.findRoleByRoleName("ROLE_USER"));
-//        }
 
         user.setRoles(roles);
 

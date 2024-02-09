@@ -23,8 +23,8 @@ public class DataInicializer {
 
     @PostConstruct
     public void initialize() {
-        roleService.saveRole(new Role("ROLE_ADMIN"));
-        roleService.saveRole(new Role("ROLE_USER"));
+        roleService.saveRole(new Role("ROLE_ADMIN1"));
+        roleService.saveRole(new Role("ROLE_USER1"));
         Set<Role> adminRole = new HashSet<>();
         Set<Role> userRole = new HashSet<>();
         adminRole.add(roleService.findRoleByRoleName("ROLE_ADMIN"));
