@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -94,6 +95,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

@@ -55,6 +55,8 @@ public class Role implements GrantedAuthority {
         this.setUser = setUser;
     }
 
+
+
     @Override
     public String getAuthority() {
         return getRole();
@@ -70,8 +72,5 @@ public class Role implements GrantedAuthority {
         return id == role.id;
     }
 
-    @Override
-    public int hashCode() {
-        return id;
-    }
+
 }

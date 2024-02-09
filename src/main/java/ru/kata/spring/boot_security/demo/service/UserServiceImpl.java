@@ -25,7 +25,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void save(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+        Optional<User> us = userDao.findByEmail(user.getEmail());
+        if (us.isEmpty()) {
+            user.setPassword(encoder.encode(user.getPassword()));
+        }
         userDao.save(user);
     }
 
@@ -47,8 +50,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(user.getPassword().toString().equals(findById(user.getId()).get().getPassword())){
             userDao.updateUser(user);
         } else{
-        user.setPassword(encoder.encode(user.getPassword()));
-        userDao.updateUser(user);}
+            user.setPassword(encoder.encode(user.getPassword()));
+            userDao.updateUser(user);}
     }
 
     @Override
