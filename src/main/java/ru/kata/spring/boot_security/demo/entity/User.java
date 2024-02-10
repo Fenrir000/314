@@ -95,7 +95,9 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    
+    public boolean hasRole(String roleName) {
+        return roles.stream().anyMatch(role -> role.getRole().equals(roleName));
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
-public class AdmController {
+public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
 
 
-    public AdmController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -37,12 +37,10 @@ public class AdmController {
 
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("newUser")User user,@RequestParam("rolesCheckBox") List<String> selectedRoles) {
-                Set<Role> roles = selectedRoles.stream()
+    public String createUser(@ModelAttribute("newUser") User user, @RequestParam("rolesCheckBox") List<String> selectedRoles) {
+        Set<Role> roles = selectedRoles.stream()
                 .map(s -> roleService.findRoleByRoleName("ROLE_" + s))
                 .collect(Collectors.toSet());
-
-
         user.setRoles(roles);
         userService.save(user);
         return "redirect:/admin";
@@ -50,18 +48,11 @@ public class AdmController {
 
 
     @PatchMapping("/update")
-    public String updateUser(@ModelAttribute("oneUser") User user,@RequestParam("rolesCheckBox") List<String> selectedRoles) {
-        System.out.println(user.getEmail());
-        System.out.println(user.getFirstName());
-        System.out.println(user.getLastName());
-
+    public String updateUser(@ModelAttribute("oneUser") User user, @RequestParam("rolesCheckBox") List<String> selectedRoles) {
         Set<Role> roles = selectedRoles.stream()
                 .map(s -> roleService.findRoleByRoleName("ROLE_" + s))
                 .collect(Collectors.toSet());
-
-
         user.setRoles(roles);
-
         userService.updateUser(user);
         return "redirect:/admin";
     }

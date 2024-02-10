@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void updateUser(User user) {
-        if(user.getPassword().toString().equals(findById(user.getId()).get().getPassword())){
+        if(user.getPassword().equals(findById(user.getId()).get().getPassword())){
             userDao.updateUser(user);
         } else{
             user.setPassword(encoder.encode(user.getPassword()));
@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public Optional<User> findByEmail(String email) {
         return userDao.findByEmail(email);
     }

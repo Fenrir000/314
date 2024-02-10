@@ -113,9 +113,10 @@
                               <h6 class="card-title" style="margin: 5px 0; text-align: center">Password</h6>
                               <input type="password" th:name="password" th:value="${oneUser.password}" class="form-control" placeholder="Password">
                               <h6 class="card-title" style="margin: 5px 0; text-align: center">Roles</h6>
-                              <input type="checkbox" id="role_user1" name="rolesCheckBox" value="USER">
+                              <input type="hidden" name="rolesCheckBox" value="null">
+                              <input type="checkbox" id="role_user1" name="rolesCheckBox" value="USER" th:checked="${oneUser.hasRole('ROLE_USER')}">
                               <label for="role_user">USER</label><br>
-                              <input type="checkbox" id="role_admin1" name="rolesCheckBox" value="ADMIN">
+                              <input type="checkbox" id="role_admin1" name="rolesCheckBox" value="ADMIN" th:checked="${oneUser.hasRole('ROLE_ADMIN')}">
                               <label for="role_admin">ADMIN</label><br>
                             </div>
                           </div>
@@ -187,11 +188,11 @@
                   <input required type="email" name="email" th:field="${newUser.email}" class="form-control" placeholder="Email">
                   <h6 class="card-title" style="margin: 5px 0; text-align: center">Password</h6>
                   <input type="password" name="password" class="form-control"  th:field="${newUser.password}" placeholder="Password" aria-describedby="passwordHelpBlock">
-
                   <h6 class="card-title" style="margin: 5px 0; text-align: center">Roles</h6>
-                  <input type="checkbox" id="role_user" name="rolesCheckBox" value="USER">
+                  <input type="hidden" name="rolesCheckBox" value="null">
+                  <input type="checkbox" id="role_user" name="rolesCheckBox" value="USER" >
                   <label for="role_user">USER</label><br>
-                  <input type="checkbox" id="role_admin" name="rolesCheckBox" value="ADMIN">
+                  <input type="checkbox" id="role_admin" name="rolesCheckBox" value="ADMIN" >
                   <label for="role_admin">ADMIN</label><br>
                   <button style="margin: 10px 0" type="submit" class="btn btn-lg btn-success">Add new user</button>
                 </div>
